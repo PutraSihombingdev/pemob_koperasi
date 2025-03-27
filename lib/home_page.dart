@@ -111,13 +111,14 @@ class HomePage extends StatelessWidget {
                     _buildMenuItem(Icons.credit_card, "Pembayaran"),
                     _buildMenuItem(Icons.business_center, "Pinjaman"),
                     _buildMenuItem(Icons.receipt_long, "Mutasi"),
+                    _buildMenuItem(Icons.money_off, "Tarik Tunai")
                   ],
                 ),
               ),
 
               SizedBox(height: 20),
 
-              // Butuh Bantuan
+            
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
