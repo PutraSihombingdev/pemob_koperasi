@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_tugas_pemob2/tarik_tunai.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -105,13 +106,20 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 10,
                   physics: NeverScrollableScrollPhysics(),
                   children: [
-                    _buildMenuItem(Icons.account_balance_wallet, "Cek Saldo"),
+                    _buildMenuItem(Icons.account_balance_wallet, "Cek Saldo",),
                     _buildMenuItem(Icons.send, "Transfer"),
                     _buildMenuItem(Icons.savings, "Deposito"),
                     _buildMenuItem(Icons.credit_card, "Pembayaran"),
                     _buildMenuItem(Icons.business_center, "Pinjaman"),
                     _buildMenuItem(Icons.receipt_long, "Mutasi"),
-                    _buildMenuItem(Icons.money_off, "Tarik Tunai")
+                    _buildMenuItem(Icons.money_off, "Tarik Tunai", onPressed: () 
+                    {
+                      Navigator.push(context, MaterialPageRoute
+                      (
+                        builder: (context) => TarikTunai()
+                        ),
+                        );
+                    })
                   ],
                 ),
               ),
@@ -158,16 +166,20 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String label) {
-    return Column(
+  Widget _buildMenuItem(IconData icon, String label, {VoidCallback? onPressed}) {
+  return GestureDetector(
+    onTap: onPressed, 
+    child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(icon, size: 40, color: Colors.blue),
         SizedBox(height: 5),
         Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       ],
-    );
-  }
+    ),
+  );
+}
+
 
 
   Widget _buildBottomNavItem(IconData icon, String label) {
