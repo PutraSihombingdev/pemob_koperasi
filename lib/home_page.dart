@@ -169,7 +169,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
- 
+
   Widget _buildBottomNavItem(IconData icon, String label) {
     return Column(
       children: [
