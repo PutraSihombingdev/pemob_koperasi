@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_tugas_pemob2/tarik_tunai.dart';
+import 'package:flutter_application_tugas_pemob2/cek_saldo.dart';
+import 'package:flutter_application_tugas_pemob2/transfer.dart';
+import 'package:flutter_application_tugas_pemob2/deposito.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -12,14 +15,6 @@ class HomePage extends StatelessWidget {
         ),
         backgroundColor: Color(0xFF1E3A8A),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.door_back_door, color: Colors.white),
-            onPressed: () {
-            
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -70,7 +65,7 @@ class HomePage extends StatelessWidget {
                                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    'Rp. 999.999.999',
+                                    'Rp. 50.000',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                     ],
@@ -106,9 +101,21 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 10,
                   physics: NeverScrollableScrollPhysics(),
                   children: [
-                    _buildMenuItem(Icons.account_balance_wallet, "Cek Saldo",),
-                    _buildMenuItem(Icons.send, "Transfer"),
-                    _buildMenuItem(Icons.savings, "Deposito"),
+                    _buildMenuItem(Icons.account_balance_wallet, "Cek Saldo", onPressed:(){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CekSaldoPage()
+                       ),
+                       );
+                    } ),
+                    _buildMenuItem(Icons.send, "Transfer" , onPressed: () {
+                      Navigator.push(context,  MaterialPageRoute(builder: (context) => TransferPage()
+                      ),
+                      );
+                    },),
+                    _buildMenuItem(Icons.savings, "Deposito" ,onPressed: () {
+                      Navigator.push(context,  MaterialPageRoute(builder: (context) => DepositoPage()
+                      ),
+                      );
+                    }, ),
                     _buildMenuItem(Icons.credit_card, "Pembayaran"),
                     _buildMenuItem(Icons.business_center, "Pinjaman"),
                     _buildMenuItem(Icons.receipt_long, "Mutasi"),
