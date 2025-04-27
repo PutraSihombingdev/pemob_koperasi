@@ -3,6 +3,10 @@ import 'package:flutter_application_tugas_pemob2/tarik_tunai.dart';
 import 'package:flutter_application_tugas_pemob2/cek_saldo.dart';
 import 'package:flutter_application_tugas_pemob2/transfer.dart';
 import 'package:flutter_application_tugas_pemob2/deposito.dart';
+import 'package:flutter_application_tugas_pemob2/profile.dart';
+import 'package:flutter_application_tugas_pemob2/pembayaran.dart';
+import 'package:flutter_application_tugas_pemob2/pinjaman.dart';
+import 'package:flutter_application_tugas_pemob2/mutasi.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -116,9 +120,21 @@ class HomePage extends StatelessWidget {
                       ),
                       );
                     }, ),
-                    _buildMenuItem(Icons.credit_card, "Pembayaran"),
-                    _buildMenuItem(Icons.business_center, "Pinjaman"),
-                    _buildMenuItem(Icons.receipt_long, "Mutasi"),
+                    _buildMenuItem(Icons.credit_card, "Pembayaran" ,onPressed: () {
+                      Navigator.push(context,  MaterialPageRoute(builder: (context) => PembayaranPage()
+                      ),
+                      );
+                    },),
+                    _buildMenuItem(Icons.business_center, "Pinjaman " ,onPressed: () {
+                      Navigator.push(context,  MaterialPageRoute(builder: (context) => PinjamanPage()
+                      ),
+                      );
+                    },),
+                    _buildMenuItem(Icons.receipt_long, "Mutasi" , onPressed: () {
+                      Navigator.push(context,  MaterialPageRoute(builder: (context) => PinjamanPage()
+                      ),
+                      );
+                    },),
                     _buildMenuItem(Icons.money_off, "Tarik Tunai", onPressed: () 
                     {
                       Navigator.push(context, MaterialPageRoute
@@ -158,14 +174,24 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 20),
 
           
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildBottomNavItem(Icons.settings, "Setting"),
-                  _buildBottomNavItem(Icons.qr_code, ""),
-                  _buildBottomNavItem(Icons.person, "Profile"),
-                ],
-              ),
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceAround,
+  children: [
+    _buildBottomNavItem(Icons.settings, "Setting", onTap: () {
+      // Arahkan ke halaman Setting jika ada
+    }),
+    _buildBottomNavItem(Icons.qr_code, "", onTap: () {
+      // QR code action (jika ada)
+    }),
+    _buildBottomNavItem(Icons.person, "Profile", onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    }),
+  ],
+),
+
             ],
           ),
         ),
@@ -189,14 +215,18 @@ class HomePage extends StatelessWidget {
 
 
 
-  Widget _buildBottomNavItem(IconData icon, String label) {
-    return Column(
+  Widget _buildBottomNavItem(IconData icon, String label, {VoidCallback? onTap}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Column(
       children: [
         Icon(icon, size: 40, color: Colors.blue),
         if (label.isNotEmpty) SizedBox(height: 5),
         if (label.isNotEmpty)
           Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       ],
-    );
-  }
+    ),
+  );
+}
+
 }

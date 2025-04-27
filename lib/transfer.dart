@@ -14,6 +14,7 @@ class _TransferPageState extends State<TransferPage> {
   final List<String> _rekeningList = [
     'Rekening Utama - 1234',
     'Tabungan - 5678',
+    'Buat Belanja - 50123'
   ];
 
   void _konfirmasiTransfer() {

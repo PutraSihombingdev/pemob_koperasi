@@ -25,8 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _login() {
-    if (_usernameController.text == "nim" &&
-        _passwordController.text == "nim") {
+    if (_usernameController.text == "2315091074" &&
+        _passwordController.text == "2315091074") {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
