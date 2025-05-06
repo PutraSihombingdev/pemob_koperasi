@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_tugas_pemob2/tarik_tunai.dart';
-import 'package:flutter_application_tugas_pemob2/cek_saldo.dart';
-import 'package:flutter_application_tugas_pemob2/transfer.dart';
-import 'package:flutter_application_tugas_pemob2/deposito.dart';
-import 'package:flutter_application_tugas_pemob2/profile.dart';
-import 'package:flutter_application_tugas_pemob2/pembayaran.dart';
-import 'package:flutter_application_tugas_pemob2/pinjaman.dart';
-import 'package:flutter_application_tugas_pemob2/mutasi.dart';
+import 'package:intl/intl.dart';
+import 'cekSaldo.dart';
+import 'transfer.dart';
+import 'deposito.dart';
+import 'profile.dart';
+import 'pembayaran.dart';
+import 'pinjaman.dart';
+import 'mutasi.dart';
+import 'nasabah_provider.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+
+
+class HomePage extends StatefulWidget {
+  const HomePage ({super.key});
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+   String namaNasabah = 'Putra Bambang Sihombing';
   @override
   Widget build(BuildContext context) {
+      final saldo = context.watch<NasabahProvider>().saldo;
+
+    final formattedSaldo = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 2,
+    ).format(saldo);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -25,7 +43,6 @@ class HomePage extends StatelessWidget {
           padding: EdgeInsets.all(16.0),
           child: Column(
             children: [
-             
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -37,7 +54,7 @@ class HomePage extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: AssetImage('saya.jpg'), 
+                        backgroundImage: AssetImage('saya.jpg'),
                       ),
                       SizedBox(width: 10),
                       Expanded(
@@ -64,17 +81,15 @@ class HomePage extends StatelessWidget {
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [Text(
-                                    'Total Saldo Anda',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Rp. 50.000',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
+                                    children: [
+                                  
+                                        Text("Nasabah", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Text(namaNasabah),
+                                        SizedBox(height: 6),
+                                        Text("Total Saldo Anda", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Text(formattedSaldo),
                                     ],
                                   )
-                                  
                                 ],
                               ),
                             ),
@@ -105,51 +120,33 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 10,
                   physics: NeverScrollableScrollPhysics(),
                   children: [
-                    _buildMenuItem(Icons.account_balance_wallet, "Cek Saldo", onPressed:(){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CekSaldoPage()
-                       ),
-                       );
-                    } ),
-                    _buildMenuItem(Icons.send, "Transfer" , onPressed: () {
-                      Navigator.push(context,  MaterialPageRoute(builder: (context) => TransferPage()
-                      ),
-                      );
-                    },),
-                    _buildMenuItem(Icons.savings, "Deposito" ,onPressed: () {
-                      Navigator.push(context,  MaterialPageRoute(builder: (context) => DepositoPage()
-                      ),
-                      );
-                    }, ),
-                    _buildMenuItem(Icons.credit_card, "Pembayaran" ,onPressed: () {
-                      Navigator.push(context,  MaterialPageRoute(builder: (context) => PembayaranPage()
-                      ),
-                      );
-                    },),
-                    _buildMenuItem(Icons.business_center, "Pinjaman " ,onPressed: () {
-                      Navigator.push(context,  MaterialPageRoute(builder: (context) => PinjamanPage()
-                      ),
-                      );
-                    },),
-                    _buildMenuItem(Icons.receipt_long, "Mutasi" , onPressed: () {
-                      Navigator.push(context,  MaterialPageRoute(builder: (context) => PinjamanPage()
-                      ),
-                      );
-                    },),
-                    _buildMenuItem(Icons.money_off, "Tarik Tunai", onPressed: () 
-                    {
-                      Navigator.push(context, MaterialPageRoute
-                      (
-                        builder: (context) => TarikTunai()
-                        ),
-                        );
-                    })
+                    _buildMenuItem(Icons.account_balance_wallet, "Cek Saldo", onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CekSaldoPage()));
+                    }),
+                    _buildMenuItem(Icons.send, "Transfer", onPressed: () async {
+                      final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => TransferPage()));
+                      if (result == true) {
+                        setState(() {});
+                      }
+                    }),
+                    _buildMenuItem(Icons.savings, "Deposito", onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DepositoPage()));
+                    }),
+                    _buildMenuItem(Icons.credit_card, "Pembayaran", onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>PembayaranPage()));
+                    }),
+                    _buildMenuItem(Icons.business_center, "Pinjaman", onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PinjamanPage()));
+                    }),
+                    _buildMenuItem(Icons.receipt_long, "Mutasi", onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MutasiPage()));
+                    }),
                   ],
                 ),
               ),
 
               SizedBox(height: 20),
 
-            
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -173,25 +170,20 @@ class HomePage extends StatelessWidget {
 
               SizedBox(height: 20),
 
-          
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceAround,
-  children: [
-    _buildBottomNavItem(Icons.settings, "Setting", onTap: () {
-      // Arahkan ke halaman Setting jika ada
-    }),
-    _buildBottomNavItem(Icons.qr_code, "", onTap: () {
-      // QR code action (jika ada)
-    }),
-    _buildBottomNavItem(Icons.person, "Profile", onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
-    }),
-  ],
-),
-
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildBottomNavItem(Icons.settings, "Setting", onTap: () {
+                    // Navigasi ke halaman setting
+                  }),
+                  _buildBottomNavItem(Icons.qr_code, "", onTap: () {
+                    // QR code action
+                  }),
+                  _buildBottomNavItem(Icons.person, "Profile", onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
+                  }),
+                ],
+              ),
             ],
           ),
         ),
@@ -200,33 +192,30 @@ Row(
   }
 
   Widget _buildMenuItem(IconData icon, String label, {VoidCallback? onPressed}) {
-  return GestureDetector(
-    onTap: onPressed, 
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, size: 40, color: Colors.blue),
-        SizedBox(height: 5),
-        Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-      ],
-    ),
-  );
-}
-
-
+    return GestureDetector(
+      onTap: onPressed,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 40, color: Colors.blue),
+          SizedBox(height: 5),
+          Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
 
   Widget _buildBottomNavItem(IconData icon, String label, {VoidCallback? onTap}) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Column(
-      children: [
-        Icon(icon, size: 40, color: Colors.blue),
-        if (label.isNotEmpty) SizedBox(height: 5),
-        if (label.isNotEmpty)
-          Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-      ],
-    ),
-  );
-}
-
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Icon(icon, size: 40, color: Colors.blue),
+          if (label.isNotEmpty) SizedBox(height: 5),
+          if (label.isNotEmpty)
+            Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
 }

@@ -1,64 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'nasabah_provider.dart';
 
 class DepositoPage extends StatefulWidget {
+  const DepositoPage({super.key});
+
   @override
-  _DepositoPageState createState() => _DepositoPageState();
+  State<DepositoPage> createState() => _DepositoPageState();
 }
 
 class _DepositoPageState extends State<DepositoPage> {
-  final TextEditingController _nominalController = TextEditingController();
-  String? _selectedRekening;
-  String? _selectedTenor;
+  final _jumlahController = TextEditingController();
+  final _tokenController = TextEditingController();
 
-  final List<String> _rekeningList = [
-    'Rekening Utama - 1234',
-    'Tabungan - 5678',
-  ];
+  void _depositSaldo(BuildContext context) {
+    final jumlah = double.tryParse(_jumlahController.text.replaceAll(',', '').replaceAll('.', '')) ?? 0;
+    final token = _tokenController.text.trim();
 
-  final List<String> _tenorList = [
-    '1 Bulan',
-    '3 Bulan',
-    '6 Bulan',
-    '12 Bulan',
-  ];
-
-  void _konfirmasiDeposito() {
-    final nominal = _nominalController.text.trim();
-
-    if (_selectedRekening == null || _selectedTenor == null || nominal.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Harap isi semua data')),
-      );
+    if (jumlah <= 0 || token.isEmpty) {
+      _showDialog('Jumlah deposito atau token tidak valid');
       return;
     }
+
+    if (token != '123') {
+      _showDialog('Token salah. Silakan coba lagi.');
+      return;
+    }
+
+    final formattedJumlah = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 2,
+    ).format(jumlah);
 
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Konfirmasi Deposito'),
+        title: const Text('Konfirmasi Deposito'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Rekening Sumber : $_selectedRekening'),
-            Text('Nominal         : Rp $nominal'),
-            Text('Jangka Waktu    : $_selectedTenor'),
+            const Text('Apakah Anda yakin ingin mendepositokan sejumlah:'),
+            const SizedBox(height: 8),
+            Text(
+              formattedJumlah,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Batal'),
+            child: const Text('Batal'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Deposito berhasil dibuat')),
-              );
+              final saldo = context.read<NasabahProvider>().saldo;
+              context.read<NasabahProvider>().updateSaldo(saldo + jumlah);
+              Navigator.pop(context); // tutup konfirmasi
+              _showDialog('Deposito berhasil sejumlah $formattedJumlah');
+              _jumlahController.clear();
+              _tokenController.clear();
             },
-            child: Text('Setor Deposito'),
+            child: const Text('Ya, Setor'),
           ),
+        ],
+      ),
+    );
+  }
+
+  void _showDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Informasi'),
+        content: Text(message),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
         ],
       ),
     );
@@ -66,68 +86,48 @@ class _DepositoPageState extends State<DepositoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final saldo = context.watch<NasabahProvider>().saldo;
+    final formattedSaldo = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 2).format(saldo);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Buka Deposito'),
+        title: const Text('Deposito'),
+        backgroundColor: Colors.blue[900],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            DropdownButtonFormField<String>(
-              value: _selectedRekening,
-              items: _rekeningList
-                  .map((rekening) => DropdownMenuItem(
-                        value: rekening,
-                        child: Text(rekening),
-                      ))
-                  .toList(),
-              decoration: InputDecoration(
-                labelText: 'Pilih Rekening Sumber',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _selectedRekening = value;
-                });
-              },
-            ),
-            SizedBox(height: 20),
+            Text('Saldo Saat Ini: $formattedSaldo', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
             TextField(
-              controller: _nominalController,
+              controller: _jumlahController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Nominal Deposito',
-                hintText: 'Contoh: 1000000',
+              decoration: const InputDecoration(
+                labelText: 'Jumlah Deposito',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              value: _selectedTenor,
-              items: _tenorList
-                  .map((tenor) => DropdownMenuItem(
-                        value: tenor,
-                        child: Text(tenor),
-                      ))
-                  .toList(),
-              decoration: InputDecoration(
-                labelText: 'Jangka Waktu Deposito',
+            const SizedBox(height: 16),
+            TextField(
+              controller: _tokenController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Token',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) {
-                setState(() {
-                  _selectedTenor = value;
-                });
-              },
             ),
-            SizedBox(height: 30),
-            ElevatedButton.icon(
-              onPressed: _konfirmasiDeposito,
-              icon: Icon(Icons.savings),
-              label: Text('Konfirmasi Deposito'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size.fromHeight(50),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _depositSaldo(context),
+                icon: const Icon(Icons.savings),
+                label: const Text('Deposit'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[700],
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
               ),
             ),
           ],

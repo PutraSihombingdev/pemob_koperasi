@@ -1,62 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'nasabah_provider.dart';
 
 class TransferPage extends StatefulWidget {
+  const TransferPage({super.key});
+
   @override
-  _TransferPageState createState() => _TransferPageState();
+  State<TransferPage> createState() => _TransferPageState();
 }
 
 class _TransferPageState extends State<TransferPage> {
-  final TextEditingController _nomorRekeningController = TextEditingController();
-  final TextEditingController _nominalController = TextEditingController();
-  final TextEditingController _beritaController = TextEditingController();
+  final _rekeningController = TextEditingController();
+  final _jumlahController = TextEditingController();
 
-  String? _selectedRekeningAsal;
-  final List<String> _rekeningList = [
-    'Rekening Utama - 1234',
-    'Tabungan - 5678',
-    'Buat Belanja - 50123'
-  ];
+void _transferSaldo(BuildContext context) {
+  final saldo = context.read<NasabahProvider>().saldo;
+  final jumlah = double.tryParse(_jumlahController.text.replaceAll(',', '').replaceAll('.', '')) ?? 0;
+  final rekening = _rekeningController.text.trim();
 
-  void _konfirmasiTransfer() {
-    final rekeningTujuan = _nomorRekeningController.text.trim();
-    final nominal = _nominalController.text.trim();
-    final berita = _beritaController.text.trim();
+  if (jumlah <= 0 || rekening.isEmpty) {
+    _showDialog('Nomor rekening atau jumlah transfer tidak valid');
+    return;
+  }
 
-    if (_selectedRekeningAsal == null || rekeningTujuan.isEmpty || nominal.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Harap isi semua data yang diperlukan')),
-      );
-      return;
-    }
+  if (jumlah > saldo) {
+    _showDialog('Saldo Anda tidak cukup');
+  } else {
+    final formattedJumlah = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 2,
+    ).format(jumlah);
 
+    // Tampilkan konfirmasi
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Konfirmasi Transfer'),
+        title: const Text('Konfirmasi Transfer'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Dari      : $_selectedRekeningAsal'),
-            Text('Ke        : $rekeningTujuan'),
-            Text('Jumlah    : Rp $nominal'),
-            if (berita.isNotEmpty) Text('Berita    : $berita'),
+            Text('Apakah Anda yakin ingin mentransfer'),
+            const SizedBox(height: 8),
+            Text(
+              '$formattedJumlah',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text('ke rekening: $rekening'),
           ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Batal'),
+            onPressed: () => Navigator.pop(context), // batal
+            child: const Text('Batal'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Transfer berhasil diproses')),
-              );
+              context.read<NasabahProvider>().updateSaldo(saldo - jumlah);
+              Navigator.pop(context); // tutup dialog konfirmasi
+              _showDialog('Transfer berhasil ke rekening $rekening sejumlah $formattedJumlah');
+              _rekeningController.clear();
+              _jumlahController.clear();
             },
-            child: Text('Kirim'),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            child: const Text('Ya, Transfer'),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+
+  void _showDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Informasi'),
+        content: Text(message),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
         ],
       ),
     );
@@ -64,67 +89,48 @@ class _TransferPageState extends State<TransferPage> {
 
   @override
   Widget build(BuildContext context) {
+    final saldo = context.watch<NasabahProvider>().saldo;
+    final formattedSaldo = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 2).format(saldo);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Transfer Uang'),
+        title: const Text('Transfer Saldo'),
+        backgroundColor: Colors.blue[900],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            DropdownButtonFormField<String>(
-              value: _selectedRekeningAsal,
-              items: _rekeningList
-                  .map((rekening) => DropdownMenuItem(
-                        value: rekening,
-                        child: Text(rekening),
-                      ))
-                  .toList(),
-              decoration: InputDecoration(
-                labelText: 'Pilih Rekening Asal',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _selectedRekeningAsal = value;
-                });
-              },
-            ),
-            SizedBox(height: 20),
+            Text('Saldo Saat Ini: $formattedSaldo', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
             TextField(
-              controller: _nomorRekeningController,
+              controller: _rekeningController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nomor Rekening Tujuan',
-                hintText: 'Contoh: 1234567890',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 16),
             TextField(
-              controller: _nominalController,
+              controller: _jumlahController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Nominal Transfer',
-                hintText: 'Contoh: 250000',
+              decoration: const InputDecoration(
+                labelText: 'Jumlah Transfer',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _beritaController,
-              decoration: InputDecoration(
-                labelText: 'Berita Transfer (Opsional)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 30),
-            ElevatedButton.icon(
-              onPressed: _konfirmasiTransfer,
-              icon: Icon(Icons.send),
-              label: Text('Konfirmasi Transfer'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size.fromHeight(50),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _transferSaldo(context),
+                icon: const Icon(Icons.send),
+                label: const Text('Transfer'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[800],
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
               ),
             ),
           ],
