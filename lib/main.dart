@@ -1,16 +1,19 @@
+import 'package:aplikasikoperasiundiksha/mutasi_provider.dart';
 import 'package:flutter/material.dart';
 import 'mutasi.dart';
 import 'pembayaran.dart';
 import 'profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'login.dart';
 import 'home_page.dart';
 import 'cekSaldo.dart';
 import 'transfer.dart';
 import 'deposito.dart';
 import 'nasabah_provider.dart';
+import 'pinjaman_provider.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +21,12 @@ void main() async {
   final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => NasabahProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => NasabahProvider()),
+        ChangeNotifierProvider(create: (_) => PinjamanProvider()),
+         ChangeNotifierProvider(create: (_) => MutasiProvider()),
+      ],
       child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );

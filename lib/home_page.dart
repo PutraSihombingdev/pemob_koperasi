@@ -1,3 +1,5 @@
+import 'package:aplikasikoperasiundiksha/pengaturan.dart';
+import 'package:aplikasikoperasiundiksha/qris.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'cekSaldo.dart';
@@ -174,11 +176,14 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildBottomNavItem(Icons.settings, "Setting", onTap: () {
-                    // Navigasi ke halaman setting
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
                   }),
                   _buildBottomNavItem(Icons.qr_code, "", onTap: () {
-                    // QR code action
-                  }),
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => QRISPage()), // Navigate to QRISPage for QR scanning
+  );
+}),
                   _buildBottomNavItem(Icons.person, "Profile", onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
                   }),

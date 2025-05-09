@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'nasabah_provider.dart';
+import 'mutasi_provider.dart';
+import 'mutasi.dart';
 
 class TransferPage extends StatefulWidget {
   const TransferPage({super.key});
@@ -59,6 +61,14 @@ void _transferSaldo(BuildContext context) {
           ElevatedButton(
             onPressed: () {
               context.read<NasabahProvider>().updateSaldo(saldo - jumlah);
+              context.read<MutasiProvider>().tambahMutasi(
+                  Mutasi(
+                    tipe: 'Transfer',
+                    deskripsi: 'Transfer ke rekening $rekening',
+                    jumlah: -jumlah,
+                    tanggal: DateTime.now(),
+                  ),
+                );
               Navigator.pop(context); // tutup dialog konfirmasi
               _showDialog('Transfer berhasil ke rekening $rekening sejumlah $formattedJumlah');
               _rekeningController.clear();
