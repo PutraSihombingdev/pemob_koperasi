@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           const SizedBox(height: 20),
           Image.asset(
-            'assets/logo_undiksha.png', 
+            'assets/undiksha.png', 
             height: 150,
           ),
           Padding(

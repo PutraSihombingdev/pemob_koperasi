@@ -12,26 +12,27 @@ import 'mutasi.dart';
 import 'nasabah_provider.dart';
 import 'package:provider/provider.dart';
 
-
-
 class HomePage extends StatefulWidget {
-  const HomePage ({super.key});
+  const HomePage({super.key});
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-   String namaNasabah = 'Putra Bambang Sihombing';
+  String namaNasabah = 'Putra Bambang Sihombing';
+
   @override
   Widget build(BuildContext context) {
-      final saldo = context.watch<NasabahProvider>().saldo;
+    final saldo = context.watch<NasabahProvider>().saldo;
 
     final formattedSaldo = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp ',
       decimalDigits: 2,
     ).format(saldo);
+
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           'Koperasi Undiksha',
@@ -39,59 +40,62 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: Color(0xFF1E3A8A),
         centerTitle: true,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              // Profile Card
               Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                elevation: 4,
+                elevation: 5,
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
                       CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('saya.jpg'),
+                        radius: 40,
+                        backgroundImage: AssetImage('pto.jpg'),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Nasabah',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            const Text(
+                              'Selamat Datang,',
+                              style: TextStyle(fontSize: 14, color: Colors.grey),
                             ),
                             Text(
-                              'Putra Bambang Sihombing',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(15),
+                              namaNasabah,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
-                              child: Row(
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                  
-                                        Text("Nasabah", style: TextStyle(fontWeight: FontWeight.bold)),
-                                        Text(namaNasabah),
-                                        SizedBox(height: 6),
-                                        Text("Total Saldo Anda", style: TextStyle(fontWeight: FontWeight.bold)),
-                                        Text(formattedSaldo),
-                                    ],
-                                  )
+                                  const Text(
+                                    "Total Saldo Anda",
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    formattedSaldo,
+                                    style: const TextStyle(fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),
+                                  ),
                                 ],
                               ),
                             ),
@@ -103,24 +107,22 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 24),
 
               // Grid Menu
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 4)),
-                  ],
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 4))],
                 ),
                 child: GridView.count(
                   shrinkWrap: true,
                   crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildMenuItem(Icons.account_balance_wallet, "Cek Saldo", onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => CekSaldoPage()));
@@ -135,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => DepositoPage()));
                     }),
                     _buildMenuItem(Icons.credit_card, "Pembayaran", onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>PembayaranPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PembayaranPage()));
                     }),
                     _buildMenuItem(Icons.business_center, "Pinjaman", onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => PinjamanPage()));
@@ -147,43 +149,43 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 24),
 
+              // Bantuan
               Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blue[100],
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: const [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Butuh Bantuan?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        Text('0858-3173-6145', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 4),
+                        Text('0858-3173-6145', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue)),
                       ],
                     ),
-                    Icon(Icons.phone, color: Colors.blue, size: 40),
+                    Icon(Icons.phone, color: Colors.blue),
                   ],
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 24),
 
+              // Bottom Navigation
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildBottomNavItem(Icons.settings, "Setting", onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
                   }),
-                  _buildBottomNavItem(Icons.qr_code, "", onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => QRISPage()), // Navigate to QRISPage for QR scanning
-  );
-}),
+                  _buildBottomNavItem(Icons.qr_code, "QRIS", onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => QRViewExample()));
+                  }),
                   _buildBottomNavItem(Icons.person, "Profile", onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
                   }),
@@ -199,13 +201,20 @@ class _HomePageState extends State<HomePage> {
   Widget _buildMenuItem(IconData icon, String label, {VoidCallback? onPressed}) {
     return GestureDetector(
       onTap: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 40, color: Colors.blue),
-          SizedBox(height: 5),
-          Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-        ],
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue[50],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 36, color: Colors.blue[700]),
+            const SizedBox(height: 8),
+            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+          ],
+        ),
       ),
     );
   }
@@ -215,10 +224,9 @@ class _HomePageState extends State<HomePage> {
       onTap: onTap,
       child: Column(
         children: [
-          Icon(icon, size: 40, color: Colors.blue),
-          if (label.isNotEmpty) SizedBox(height: 5),
-          if (label.isNotEmpty)
-            Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          Icon(icon, size: 32, color: Colors.blue[700]),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
         ],
       ),
     );
