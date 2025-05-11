@@ -12,7 +12,11 @@ class MutasiPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mutasi Transaksi'),
+        title: const Text('Mutasi Transaksi', style: TextStyle(
+        color: Colors.white, 
+        fontSize: 20,
+        fontWeight: FontWeight.bold, 
+      ),),
         backgroundColor: Colors.blue[900],
       ),
       body: mutasiList.isEmpty

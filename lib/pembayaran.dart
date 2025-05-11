@@ -36,7 +36,11 @@ class _PembayaranPageState extends State<PembayaranPage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Konfirmasi Pembayaran'),
+        title: const Text('Konfirmasi Pembayaran', style: TextStyle(
+        color: Colors.white, 
+        fontSize: 20,
+        fontWeight: FontWeight.bold, 
+      ),),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +103,12 @@ class _PembayaranPageState extends State<PembayaranPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Halaman Pembayaran Koperasi'),
+        title: const Text('Pembayaran' , style: TextStyle(
+        color: Colors.white, 
+        fontSize: 20,
+        fontWeight: FontWeight.bold, 
+      ),
+      ),
         backgroundColor: Colors.indigo[800],
       ),
       body: Padding(

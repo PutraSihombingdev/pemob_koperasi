@@ -8,7 +8,11 @@ class SettingsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Konfirmasi'),
+        title: const Text('Konfirmasi', style: TextStyle(
+        color: Colors.white, 
+        fontSize: 20,
+        fontWeight: FontWeight.bold, 
+      ),),
         content: const Text('Apakah Anda yakin ingin mereset semua data? Tindakan ini tidak dapat dibatalkan.'),
         actions: [
           TextButton(

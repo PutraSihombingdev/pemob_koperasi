@@ -66,7 +66,11 @@ class PinjamanPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pembayaran Pinjaman'),
+        title: const Text('Pembayaran Pinjaman', style: TextStyle(
+        color: Colors.white, 
+        fontSize: 20,
+        fontWeight: FontWeight.bold, 
+      ),),
         backgroundColor: Colors.blue[900],
       ),
       body: Padding(
@@ -108,8 +112,8 @@ class PinjamanPage extends StatelessWidget {
                               final jumlah = double.tryParse(controller.text.replaceAll(',', '').replaceAll('.', '')) ?? 0;
                               _bayarPinjaman(context, pinjaman, jumlah);
                             },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                            child: const Text('Bayar Pinjaman'),
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[700]),
+                            child: const Text('Bayar Pinjaman',style: TextStyle(color: Colors.white)),
                           ),
                         ],
                       ),

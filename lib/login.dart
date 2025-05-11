@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
     final username = _usernameController.text.trim();
     final password = _passwordController.text;
 
-    if (username == 'putra' && password == '123') {
+    if (username == '4B' && password == '2315091074') {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('is_logged_in', true);
 
@@ -28,7 +28,10 @@ class _LoginPageState extends State<LoginPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Username atau Password Salah')),
+        const SnackBar(
+          content: Text('Username atau Password Salah'),
+          backgroundColor: Colors.red, // Menambahkan background merah
+        ),
       );
     }
   }
@@ -36,59 +39,105 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            color: Colors.blue[900],
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: const Center(
-              child: Text(
-                'Koperasi Undiksha',
-                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [const Color.fromARGB(255, 127, 144, 169)!, Colors.blue[500]!],
           ),
-          const SizedBox(height: 20),
-          Image.asset(
-            'assets/undiksha.png', 
-            height: 150,
-          ),
-          Padding(
+        ),
+        child: Center(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
+                const Text(
+                  'Koperasi Undiksha',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 20),
+                Image.asset(
+                  'assets/undiksha.png',
+                  height: 150,
+                ),
+                const SizedBox(height: 40),
+                TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                 
+                    hintText: 'Tuliskan Username Anda', // Menambahkan hintText
+                    hintStyle: const TextStyle(color: Colors.grey), // Warna teks hint
+                    labelStyle: const TextStyle(color: Colors.white),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    
+                    hintText: 'Tuliskan Password Anda', // Menambahkan hintText
+                    hintStyle: const TextStyle(color: Colors.grey), // Warna teks hint
+                    labelStyle: const TextStyle(color: Colors.white),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  ),
+                ),
+                const SizedBox(height: 30),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[900],
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 5,
                     ),
-                    child: const Text('Login'),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    // Forgot password logic here
+                  },
+                  child: const Text(
+                    'Lupa Password?',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -102,7 +102,11 @@
 
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Deposito'),
+          title: const Text('Deposito', style: TextStyle(
+        color: Colors.white, 
+        fontSize: 20,
+        fontWeight: FontWeight.bold, 
+      ),),
           backgroundColor: Colors.blue[900],
         ),
         body: Padding(
@@ -133,10 +137,9 @@
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () => _depositSaldo(context),
-                  icon: const Icon(Icons.savings),
-                  label: const Text('Deposit'),
+                  label: const Text('Deposit' ,style: TextStyle(color: Colors.white),),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[700],
+                    backgroundColor: Colors.blue[700],
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                 ),
